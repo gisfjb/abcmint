@@ -1300,15 +1300,17 @@ void exfes(int m, int n, int e, uint64_t *Mask, uint64_t maxsol, int ***Eqs, uin
 
 uint64 nLastBlockTx = 0;
 uint64 nLastBlockSize = 0;
-
+static const int64 nNewTargetTimespan = 84 * 60 * 60; // 3.5 days
 static const int64 nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
 static const int64 nTargetSpacing = 10 * 60;
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
+static const int64 nNewInterval = nNewTargetTimespan / nTargetSpacing;
 
 static unsigned int bnPowUpLimit = 256;
 static unsigned int bnPowLowLimit = 41;
 
-const int64 blockValue[35] = {250000000,5,10,20,40,80,160,320,640,1280,2560,2563,2560,1884,1386,1020,751,552,406,299,220,162,119,87,64,47,35,25,18,13,10,7,5,4,184230000000};
+const int64 blockValue[45] = {250000000,5,10,20,40,40,40,40,40,40,40,160,160,160,160,160,160,640,640,1280,1280,2563,2560,1884,1386,1020,751,552,406,299,220,162,119,87,64,47,35,25,18,13,10,7,5,4,184230000000};
+
 int64 GetBlockValue(int nHeight, int64 nFees) {
     int64 nSubsidy = 0;
 	
@@ -1350,60 +1352,121 @@ int64 GetBlockValue(int nHeight, int64 nFees) {
 		    return nSubsidy + nFees ;
 	}
 
-	// next 30 days
-	if (183*144 < nHeight && nHeight <= 213*144) {
+	// next 31 days
+	if (183*144 < nHeight && nHeight <= 214*144) {
         nSubsidy = blockValue[6] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
-	// next 31 days
-    if (213*144 < nHeight && nHeight <= 244*144) {
+	// next 30 days
+	if (214*144 < nHeight && nHeight <= 244*144) {
         nSubsidy = blockValue[7] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
 	// next 30 days
-    if (244*144 < nHeight && nHeight <= 274*144) {
+	if (244*144 < nHeight && nHeight <= 274*144) {
         nSubsidy = blockValue[8] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
-	// next 31 days
-    if (274*144 < nHeight && nHeight <= 305*144) {
+	// next 30 days
+	if (274*144 < nHeight && nHeight <= 304*144) {
         nSubsidy = blockValue[9] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
 	// next 30 days
-    if (305*144 < nHeight && nHeight <= 335*144) {
+	if (304*144 < nHeight && nHeight <= 334*144) {
         nSubsidy = blockValue[10] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
-	// next 30 days
-    if (335*144 < nHeight && nHeight <= 365*144) {
+	// next 31 days
+    if (334*144 < nHeight && nHeight <= 365*144) {
         nSubsidy = blockValue[11] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
-	// next 3 * 365 days
-    if (365*144 < nHeight && nHeight <= 4 * 365 * 144) {
+	// next 31 days
+    if (365*144 < nHeight && nHeight <= 396*144) {
         nSubsidy = blockValue[12] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (396*144 < nHeight && nHeight <= 426*144) {
+        nSubsidy = blockValue[13] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (426*144 < nHeight && nHeight <= 456*144) {
+        nSubsidy = blockValue[14] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (456*144 < nHeight && nHeight <= 486*144) {
+        nSubsidy = blockValue[15] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (486*144 < nHeight && nHeight <= 516*144) {
+        nSubsidy = blockValue[16] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 31 days
+    if (516*144 < nHeight && nHeight <= 547*144) {
+        nSubsidy = blockValue[17] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 31 days
+    if (547*144 < nHeight && nHeight <= 578*144) {
+        nSubsidy = blockValue[18] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (578*144 < nHeight && nHeight <= 608*144) {
+        nSubsidy = blockValue[19] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 30 days
+    if (608*144 < nHeight && nHeight <= 638*144) {
+        nSubsidy = blockValue[20] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+
+	// next 30 days
+    if (638*144 < nHeight && nHeight <= 668*144) {
+        nSubsidy = blockValue[21] * COIN;
+		    return nSubsidy + nFees ;
+	}
+
+	// next 3 * 365 days
+    if (365*144 + 303*144 < nHeight && nHeight <= 4 * 365 * 144 + 303*144) {
+        nSubsidy = blockValue[22] * COIN;
 		    return nSubsidy + nFees ;
 	}
 
 	// nex 84 * 365 days
 	int i = 0;
 	for (i = 0; i < 21; i++) {
-        if ( (i+1) * 365 * 144 * 4 < nHeight && nHeight <= (i+2)*365 * 144 * 4) {
-			nSubsidy = blockValue[i+13] * COIN;
+        if ( (i+1) * 365 * 144 * 4 +303*144< nHeight && nHeight <= (i+2)*365 * 144 * 4+303*144) {
+			nSubsidy = blockValue[i+23] * COIN;
 			    return nSubsidy + nFees ;
         }
 	}
 
 	// the last block
-	if ( 88 * 365 * 144  < nHeight &&  nHeight <=  88 * 365 * 144 + 1) {
-        nSubsidy = blockValue[34];
+	if ( 88 * 365 * 144 + 303*144  < nHeight &&  nHeight <=  88 * 365 * 144 + 1 + 303*144) {
+        nSubsidy = blockValue[44];
 		    return nSubsidy + nFees ;
 	}
     return 0;
@@ -1426,7 +1489,11 @@ unsigned int ComputeMinWork(unsigned int nBase, int64 nTime)
         // Maximum 400% adjustment...
         bnResult += 4;
         // ... in best-case exactly 4-times-normal target time
-        nTime -= nTargetTimespan*4;
+        if (pindexBest->nHeight <= 22176) {
+            nTime -= nTargetTimespan*4;
+        } else {
+            nTime -= nNewTargetTimespan*4;
+		}
     }
     if (bnResult > bnPowUpLimit)
         bnResult = bnPowUpLimit;
@@ -1442,44 +1509,79 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return nProofOfWorkLimit;
 
     // Only change once per interval
-    if ((pindexLast->nHeight+1) % nInterval != 0)
-    {
+    if (pindexLast->nHeight < 22176) {
+        if ((pindexLast->nHeight+1) % nInterval != 0)  {
         // Special difficulty rule for testnet:
-        if (fTestNet)
-        {
-            // If the new block's timestamp is more than 2* 10 minutes
-            // then allow mining of a min-difficulty block.
-            if (pblock->nTime > pindexLast->nTime + nTargetSpacing*2)
-                return nProofOfWorkLimit;
-            else
-            {
-                // Return the last non-special-min-difficulty-rules-block
-                const CBlockIndex* pindex = pindexLast;
-                while (pindex->pprev && pindex->nHeight % nInterval != 0 && pindex->nBits == nProofOfWorkLimit)
-                    pindex = pindex->pprev;
-                return pindex->nBits;
+            if (fTestNet) {
+                // If the new block's timestamp is more than 2* 10 minutes
+                // then allow mining of a min-difficulty block.
+                if (pblock->nTime > pindexLast->nTime + nTargetSpacing*2)
+                    return nProofOfWorkLimit;
+                else  {
+                    // Return the last non-special-min-difficulty-rules-block
+                    const CBlockIndex* pindex = pindexLast;
+                    while (pindex->pprev && pindex->nHeight % nInterval != 0 && pindex->nBits == nProofOfWorkLimit)
+                        pindex = pindex->pprev;
+                    return pindex->nBits;
+                }
             }
+
+            return pindexLast->nBits;
         }
+    } else {
+        if ((pindexLast->nHeight+1) % nNewInterval != 0)  {
+        // Special difficulty rule for testnet:
+            if (fTestNet) {
+                // If the new block's timestamp is more than 2* 10 minutes
+                // then allow mining of a min-difficulty block.
+                if (pblock->nTime > pindexLast->nTime + nTargetSpacing*2)
+                    return nProofOfWorkLimit;
+                else  {
+                    // Return the last non-special-min-difficulty-rules-block
+                    const CBlockIndex* pindex = pindexLast;
+                    while (pindex->pprev && pindex->nHeight % nNewInterval != 0 && pindex->nBits == nProofOfWorkLimit)
+                        pindex = pindex->pprev;
+                    return pindex->nBits;
+                }
+            }
 
-        return pindexLast->nBits;
-    }
-
+            return pindexLast->nBits;
+        }
+	}
+	
     // Go back by what we want to be 14 days worth of blocks
     const CBlockIndex* pindexFirst = pindexLast;
-    for (int i = 0; pindexFirst && i < nInterval-1; i++)
-        pindexFirst = pindexFirst->pprev;
-    assert(pindexFirst);
-
+	if (pindexLast->nHeight < 22176) {
+        for (int i = 0; pindexFirst && i < nInterval-1; i++)
+            pindexFirst = pindexFirst->pprev;
+            assert(pindexFirst);
+	} else {
+        for (int i = 0; pindexFirst && i < nNewInterval-1; i++)
+            pindexFirst = pindexFirst->pprev;
+            assert(pindexFirst);
+	}
     // Limit adjustment step
     int64 nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
     printf("  nActualTimespan = %" PRI64d "  before bounds\n", nActualTimespan);
-    if (nActualTimespan < nTargetTimespan/4)
-        nActualTimespan = nTargetTimespan/4;
-    if (nActualTimespan > nTargetTimespan*4)
-        nActualTimespan = nTargetTimespan*4;
+	if (pindexLast->nHeight < 22176) {
+        if (nActualTimespan < nTargetTimespan/4)
+            nActualTimespan = nTargetTimespan/4;
+        if (nActualTimespan > nTargetTimespan*4)
+            nActualTimespan = nTargetTimespan*4;
+	} else {
+        if (nActualTimespan < nNewTargetTimespan/4)
+            nActualTimespan = nNewTargetTimespan/4;
+        if (nActualTimespan > nNewTargetTimespan*4)
+            nActualTimespan = nNewTargetTimespan*4;
+	}
 
     // Retarget
-    int64 nAverageTime = nActualTimespan / nInterval;
+    int64 nAverageTime;
+	if (pindexLast->nHeight < 22176) {
+        nAverageTime = nActualTimespan / nInterval;
+	} else {
+		nAverageTime = nActualTimespan / nNewInterval;
+	}
     int64 nAddVariables = (int64)std::llround(std::log2(((long double)nTargetSpacing)/nAverageTime));
     int64 bnNew  =  pindexLast->nBits + nAddVariables;
 
@@ -1488,7 +1590,11 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     /// debug print
     printf("GetNextWorkRequired RETARGET\n");
-    printf("nTargetTimespan = %" PRI64d "    nActualTimespan = %" PRI64d "\n", nTargetTimespan, nActualTimespan);
+	if (pindexLast->nHeight < 22176) {
+        printf("nTargetTimespan = %" PRI64d "    nActualTimespan = %" PRI64d "\n", nTargetTimespan, nActualTimespan);
+	} else {
+		printf("nTargetTimespan = %" PRI64d "	 nActualTimespan = %" PRI64d "\n", nNewTargetTimespan, nActualTimespan);
+	}
     printf("Before: %08x\n", pindexLast->nBits);
     printf("After:  %" PRI64d "\n", bnNew);
 
@@ -1520,10 +1626,11 @@ static void ArrayShiftRight(uint8_t array[], int len, int nShift) {
     } while(i);
 }
 
-static void  GenCoeffMatrix(uint256 hash, unsigned int nBits, std::vector<uint8_t> &coeffM) {
+static void  NewGenCoeffMatrix(uint256 hash, unsigned int nBits, std::vector<uint8_t> &coeffM) {
     unsigned int mEquations = nBits;
     unsigned int nUnknowns = nBits+8;
     unsigned int nTerms = 1 + (nUnknowns+1)*(nUnknowns)/2;
+	//printf("\n **********************NewGenCoeffMatrix ***********************\n");
 
     //generate the first polynomial coefficients.
     unsigned char in[32], out[32];
@@ -1532,16 +1639,50 @@ static void  GenCoeffMatrix(uint256 hash, unsigned int nBits, std::vector<uint8_
     std::bitset<256> bits;
     pqcSha256(hash.begin(),32,in);
 
+	for (i = 0; i < mEquations ; i++) {
+	    count = 0;
+		do {
+            pqcSha256(in,32,out);
+            Uint256ToBits(out, bits);
+            for (k = 0; k < 256; k++) {
+                if(count < nTerms) {
+                    g[count++] = (uint8_t)bits[k];
+                 } else {
+                     break;
+                 }
+             }
+            for (j = 0; j < 32; j++) {
+                in[j] = out[j];
+            }
+        } while(count < nTerms);
+        for (j = 0; j < nTerms; j++) {
+            coeffM[i*nTerms+j] = g[j];
+        }
+    }
+}
+
+static void  GenCoeffMatrix(uint256 hash, unsigned int nBits, std::vector<uint8_t> &coeffM) {
+    unsigned int mEquations = nBits;
+    unsigned int nUnknowns = nBits+8;
+    unsigned int nTerms = 1 + (nUnknowns+1)*(nUnknowns)/2;
+	//printf("\n $$$$$$$$$$$$$$$$$$$$$$   OLD  GenCoeffMatrix $$$$$$$$$$$$$$$$$$$$\n");
+
+    //generate the first polynomial coefficients.
+    unsigned char in[32], out[32];
+    unsigned int count = 0, i, j ,k;
+    uint8_t g[nTerms];
+    std::bitset<256> bits;
+    pqcSha256(hash.begin(),32,in);
     do {
          pqcSha256(in,32,out);
          Uint256ToBits(out, bits);
          for (k = 0; k < 256; k++) {
              if(count < nTerms) {
                  g[count++] = (uint8_t)bits[k];
-             } else {
-                 break;
-             }
-         }
+              } else {
+                  break;
+              }
+          }
          for (j = 0; j < 32; j++) {
              in[j] = out[j];
          }
@@ -1552,7 +1693,7 @@ static void  GenCoeffMatrix(uint256 hash, unsigned int nBits, std::vector<uint8_
         ArrayShiftRight(g, nTerms, 1);
         for (j = 0; j < nTerms; j++)
             coeffM[i*nTerms+j] = g[j];
-    }
+    }	
 
 }
 
@@ -1671,7 +1812,11 @@ uint256 SerchSolution(uint256 hash, unsigned int nBits, uint256 randomNonce, CBl
     unsigned int nTerms = 1 + (nUnknowns+1)*(nUnknowns)/2;
     std::vector<uint8_t> coeffMatrix;
     coeffMatrix.resize(mEquations*nTerms);
-    GenCoeffMatrix(hash, nBits, coeffMatrix);
+	if (pindexPrev->nHeight < 25216) {
+        GenCoeffMatrix(hash, nBits, coeffMatrix);
+	} else {
+        NewGenCoeffMatrix(hash, nBits, coeffMatrix);
+	}
     int ***Eqs = CreateEquations(nUnknowns, mEquations);
     uint64_t maxsol = 1; // The solver only returns maxsol solutions. Other solutions will be discarded.
     uint64_t **SolArray = CreateArray(maxsol); // Set all array elements to zero.
@@ -1696,13 +1841,38 @@ uint256 SerchSolution(uint256 hash, unsigned int nBits, uint256 randomNonce, CBl
 
 }
 
-bool CheckSolution(uint256 hash, unsigned int nBits, uint256 nNonce) {
+bool CheckSolution(uint256 hash, unsigned int nBits, uint256 preblockhash, int nblockversion, uint256 nNonce) {
     unsigned int mEquations = nBits;
     unsigned int nUnknowns = nBits+8;
     unsigned int nTerms = 1 + (nUnknowns+1)*(nUnknowns)/2;
     std::vector<uint8_t> coeffMatrix;
     coeffMatrix.resize(mEquations*nTerms);
-    GenCoeffMatrix(hash, nBits, coeffMatrix);
+
+    // Get prev block index
+    CBlockIndex* pindexPrev = NULL;
+    int height = 0;
+	uint256 initHash = 0;
+    if (preblockhash != initHash) {
+        std::map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(preblockhash);
+        if (mi == mapBlockIndex.end()) {
+            if (nblockversion == 1) {
+                height = 0;
+			} 
+			if (nblockversion == 2) {
+                height = 25217;
+			}
+		} else {
+            pindexPrev = (*mi).second;
+            height = pindexPrev->nHeight+1;
+		}
+    } else {
+        height = 0;
+	}
+    if (height < 25217) {
+	    GenCoeffMatrix(hash, nBits, coeffMatrix);
+    } else {
+        NewGenCoeffMatrix(hash, nBits, coeffMatrix);
+	}
     unsigned int i, j, k, count;
     uint8_t x[nUnknowns], tempbit;
     Uint256ToSolutionBits(x, nUnknowns, nNonce);
@@ -1731,16 +1901,17 @@ bool CheckSolution(uint256 hash, unsigned int nBits, uint256 nNonce) {
 }
 
 
-bool CheckProofOfWork(uint256 hash, unsigned int nBits, uint256 nNonce)
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, uint256 preblockhash, int nblockversion,  uint256 nNonce)
 {
     unsigned int bnTarget = nBits;
 
     // Check range
     if (bnTarget <= 0 || bnTarget > bnPowUpLimit)
         return error("CheckProofOfWork() : nBits below minimum work");
-
+    if (nNonce == -1 && nblockversion > 1)
+        return false;
     // Check proof of work matches claimed amount
-    if (!CheckSolution(hash, nBits, nNonce))
+    if (!CheckSolution(hash, nBits, preblockhash, nblockversion, nNonce))
         return error("CheckProofOfWork() : hash doesn't match nBits");
 
     return true;
@@ -2223,6 +2394,13 @@ void static AbcmintMiner(CWallet *pwallet)
         int64 nStart = GetTime();
         uint256 tempHash = pblock->hashPrevBlock ^ pblock->hashMerkleRoot;
         uint256 seedHash = Hash(BEGIN(tempHash), END(tempHash));
+		uint256 prevblockhash = 0;
+		if (pindexBest->GetBlockHash() == hashGenesisBlock || pindexPrev->pprev->GetBlockHash() == hashGenesisBlock) {
+		    prevblockhash = 0;
+		} else {
+            prevblockhash = pindexPrev->GetBlockHash();
+		}
+
         while(true)
         {
             uint256 nNonceFound;
@@ -2233,7 +2411,7 @@ void static AbcmintMiner(CWallet *pwallet)
             // Check if something found
             if (nNonceFound !=  -1)
             {
-                if (CheckSolution(seedHash, pblock->nBits, nNonceFound))
+                if (CheckSolution(seedHash, pblock->nBits, prevblockhash, pblock->nVersion, nNonceFound))
                 {
                     // Found a solution
                     pblock->nNonce = nNonceFound;

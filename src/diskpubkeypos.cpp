@@ -179,6 +179,8 @@ bool UpdatePubKeyPos(CPubKey& pubKey, const std::string& address)
             //find again
             if (!FindPubKeyPos(strPubKey, pos)) {
                 printf("find again, public key %s not found in block chain! \n", address.c_str());
+                //got a wrong position, update it to null
+                pwalletMain->AddPubKeyPos(address, pos);
                 found = false;
             } else {
                 printf("find again, public key %s found at height=%d, offset=%u. \n",
@@ -218,7 +220,7 @@ void PubKeyScanner(CWallet* pwalletMain)
                 }
 
                 if(!UpdatePubKeyPos(pubKey, address)) {
-                    printf("address %s update public key position failed\n", address.c_str());
+                    printf("address %s update public key position return false\n", address.c_str());
                     allPosFound = false;
                     continue;
                 } else {
